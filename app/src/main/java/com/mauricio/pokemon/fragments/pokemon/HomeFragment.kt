@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -53,7 +54,6 @@ class HomeFragment : Fragment() {
         initScrollListener()
         initObservers()
         viewModel.getPokemons()
-
 
         val textWatcherValue = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -121,6 +121,18 @@ class HomeFragment : Fragment() {
                 pokemonAdapter.notifyItemChanged(position)
             }
         })
+
+        viewModel.messageError.observe(this, Observer { messageError ->
+            messageError?.let {message ->
+                Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+                viewModel.hideLoading()
+            }
+        })
+
+        viewModel.showLoading.observe(this, Observer { isLoading ->
+            if (isLoading) callback.showLoading()
+            else callback.hideLoading()
+        })
     }
 
     private fun unSubscribeObservers() {
@@ -129,6 +141,12 @@ class HomeFragment : Fragment() {
         }
         if (viewModel.morePokemons.hasObservers()) {
             viewModel.morePokemons.removeObservers(this)
+        }
+        if (viewModel.messageError.hasObservers()) {
+            viewModel.messageError.removeObservers(this)
+        }
+        if (viewModel.showLoading.hasObservers()) {
+            viewModel.showLoading.removeObservers(this)
         }
     }
 

@@ -9,10 +9,8 @@ object ConverterUtils {
         val ft = value.times(3.28)
         val doubleAsString = ft.toString()
         val indexOfDecimal = doubleAsString.indexOf(".")
-        val intPart = doubleAsString.substring(0, indexOfDecimal)
         val decimalPart = doubleAsString.substring(indexOfDecimal).toFloat()
-        val a = decimalPart.times(12).roundToInt()
-        val valueIn = String.format("%02d", a)
+        val valueIn = String.format("%02d", decimalPart.times(12).roundToInt())
         return "${ft.toInt()}′${valueIn}″"
     }
 
@@ -20,6 +18,5 @@ object ConverterUtils {
         val lbs = value.times(2.20462262)
         val valueIn = String.format("%.1f", lbs)
         return "${valueIn} lbs"
-
     }
 }

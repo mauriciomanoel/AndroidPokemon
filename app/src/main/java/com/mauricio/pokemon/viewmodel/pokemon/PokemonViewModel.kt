@@ -2,13 +2,14 @@ package com.mauricio.pokemon.viewmodel.pokemon
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import com.mauricio.pokemon.R
 import com.mauricio.pokemon.models.pokemon.Pokemon
 import com.mauricio.pokemon.models.pokemon.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.viewmodel.BaseViewModel
 
 class PokemonViewModel(application: Application): BaseViewModel(application) {
-
+    private val mApplication: Application = application
     private val repository: PokemonRepository by lazy { PokemonRepository.getInstance(application.baseContext) }
     val pokemons = MutableLiveData<ArrayList<Pokemon>>()
     val fullPokemon = MutableLiveData<Pokemon>()
@@ -16,6 +17,7 @@ class PokemonViewModel(application: Application): BaseViewModel(application) {
     private var offset = 0
 
     fun getPokemons() {
+        showLoading()
         repository.getPokemons(limit = TOTAL_INICIAL_POKEMONS, offset = offset, ::processPokemons, ::processFullPokemon)
     }
 
@@ -33,30 +35,27 @@ class PokemonViewModel(application: Application): BaseViewModel(application) {
     }
 
     private fun processFullPokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
+        hideLoading()
         values?.let {
             pokemons.postValue(it)
         }
-        e?.let {
-//            onError(Exception(appControllerCalculate.getResourceByKey(ResourcesTranslationConfig.ITSCALCULATOR_SIMULATOR_TECHNICALERROR)))
-        }
+        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
     }
 
     private fun processPokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
+        hideLoading()
         values?.let {
             pokemons.value = it
         }
-        e?.let {
-//            onError(Exception(appControllerCalculate.getResourceByKey(ResourcesTranslationConfig.ITSCALCULATOR_SIMULATOR_TECHNICALERROR)))
-        }
+        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
     }
 
     private fun processMorePokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
+        hideLoading()
         values?.let {
             morePokemons.value?.clear()
             morePokemons.value = it
         }
-        e?.let {
-//            onError(Exception(appControllerCalculate.getResourceByKey(ResourcesTranslationConfig.ITSCALCULATOR_SIMULATOR_TECHNICALERROR)))
-        }
+        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
     }
 }

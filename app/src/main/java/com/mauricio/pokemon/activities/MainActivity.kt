@@ -3,24 +3,34 @@ package com.mauricio.pokemon.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import com.mauricio.pokemon.R
 import com.mauricio.pokemon.activities.pokemon.DetailPokemonActivity
+import com.mauricio.pokemon.databinding.ActivityMainBinding
 import com.mauricio.pokemon.fragments.pokemon.HomeFragment
 import com.mauricio.pokemon.models.enuns.ScreenControlEnum
 import com.mauricio.pokemon.models.interfaces.IOnClickEvent
 import com.mauricio.pokemon.models.pokemon.Pokemon
+import com.mauricio.pokemon.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity(), IOnClickEvent {
+
+    private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        setContentView(R.layout.activity_main)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        setContentView(binding.root)
         switchFragment(ScreenControlEnum.HOME)
     }
 
@@ -85,6 +95,14 @@ class MainActivity : AppCompatActivity(), IOnClickEvent {
         val intent = Intent(this, DetailPokemonActivity::class.java)
         intent.putExtra(Pokemon.TAG, Gson().toJson(pokemon))
         startActivity(intent)
+    }
+
+    override fun showLoading() {
+        viewModel.showLoading()
+    }
+
+    override fun hideLoading() {
+        viewModel.hideLoading()
     }
 
     companion object {

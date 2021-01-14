@@ -89,7 +89,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         </LinearLayout>
 
         <ImageView
@@ -102,10 +101,9 @@
             app:layout_constraintTop_toTopOf="parent"
             src_url="@{pokemon.getImage}"
             image_width="@{pokemon.widthImageList}"
+            placeholder="@drawable/ic_pokeball_color"
             image_height="@{pokemon.heightImageList}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </layout>

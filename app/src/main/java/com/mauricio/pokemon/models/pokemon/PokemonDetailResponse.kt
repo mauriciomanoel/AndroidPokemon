@@ -24,18 +24,18 @@ data class PokemonDetailResponse (
         val valueKg = (weight / 10.0)
         return "${valueKg}kg (${ConverterUtils.kilogramsToPounds(valueKg.toFloat())})"
     }
-    fun getMainAbility(): String {
+    fun getMainAbility(): String? {
         abilities.firstOrNull { it.isHidden }?.let { ability ->
-            return ability.ability.name.capitalize()
+            return "1. ${ability.ability.name.capitalize()}"
         } ?: run {
-            return "-"
+            return null
         }
     }
-    fun geHiddenAbility(): String {
+    fun geHiddenAbility(): String? {
         abilities.firstOrNull { !it.isHidden }?.let { ability ->
-            return ability.ability.name.capitalize()
+            return "${ability.ability.name.capitalize()} (hidden ability)"
         } ?: run {
-            return "-"
+            return null
         }
     }
 }

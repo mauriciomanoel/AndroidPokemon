@@ -29,6 +29,7 @@ class DetailPokemonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_pokemon)
+        binding.viewModel = viewModel
         binding.lifecycleOwner = this
         setContentView(binding.root)
         initToolbar()
@@ -41,7 +42,6 @@ class DetailPokemonActivity : AppCompatActivity() {
         val pokemon = Gson().fromJson(intent.getStringExtra(Pokemon.TAG), Pokemon::class.java)
         pokemon?.let {
             viewModel.checkDataPokemon(it)
-            binding.pokemon = it
             getSupportActionBar()?.title = it.getNameFormatted()
         }
     }
@@ -72,6 +72,11 @@ class DetailPokemonActivity : AppCompatActivity() {
             pokemonTypeAdapter.notifyDataSetChanged()
         })
 
+        viewModel.fullPokemon.observe(this, Observer { pokemon ->
+            pokemon?.let {
+                binding.pokemon = it
+            }
+        })
     }
 
     private fun unSubscribeObservers() {
@@ -79,6 +84,9 @@ class DetailPokemonActivity : AppCompatActivity() {
             viewModel.statsPokemon.removeObservers(this)
         }
         if (viewModel.typesPokemon.hasObservers()) {
+            viewModel.typesPokemon.removeObservers(this)
+        }
+        if (viewModel.fullPokemon.hasObservers()) {
             viewModel.typesPokemon.removeObservers(this)
         }
     }

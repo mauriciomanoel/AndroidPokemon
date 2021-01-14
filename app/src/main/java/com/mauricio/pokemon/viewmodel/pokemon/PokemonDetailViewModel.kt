@@ -11,12 +11,17 @@ class PokemonDetailViewModel(application: Application): BaseViewModel(applicatio
     private val repository: PokemonRepository by lazy { PokemonRepository.getInstance(application.baseContext) }
     val statsPokemon = MutableLiveData<ArrayList<Stat>>()
     val typesPokemon = MutableLiveData<ArrayList<Type>>()
+    val fullPokemon = MutableLiveData<Pokemon>()
+    private lateinit var pokemon: Pokemon
 
     fun checkDataPokemon(pokemon: Pokemon) {
-
+        showLoading()
+        this.pokemon = pokemon
         pokemon.detail?.let {detail ->
+            fullPokemon.value = pokemon
             statsPokemon.value = ArrayList(detail.stats)
             typesPokemon.value = ArrayList(detail.types)
+            hideLoading()
         } ?: run {
             // get Details Pokemon
             pokemon.getId()?.let { id ->
@@ -26,7 +31,10 @@ class PokemonDetailViewModel(application: Application): BaseViewModel(applicatio
     }
 
     private fun processDetailPokemon(value: PokemonDetailResponse?, e: Throwable?) {
+        hideLoading()
         value?.let {detail ->
+            pokemon.detail = detail
+            fullPokemon.value = pokemon
             statsPokemon.value = ArrayList(detail.stats)
             typesPokemon.value = ArrayList(detail.types)
         } ?: run {
