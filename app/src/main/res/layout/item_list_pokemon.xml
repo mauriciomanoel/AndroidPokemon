@@ -80,6 +80,7 @@
                     style="?android:attr/progressBarStyle"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:indeterminate="true"
                     android:progressTint="#FFEB3B"
                     android:visibility="@{pokemon.isDetailAvaiable ? View.GONE : View.VISIBLE, default=gone}"
                     app:layout_constraintBottom_toBottomOf="parent"

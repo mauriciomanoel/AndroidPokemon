@@ -53,8 +53,18 @@ class HomeFragment : Fragment() {
         initPokemonAdapter()
         initScrollListener()
         initObservers()
+        initListenerSearch()
         viewModel.getPokemons()
 
+        // Inflate the layout for this fragment
+        return binding.root
+    }
+
+    fun filter(value: String) {
+        pokemonAdapter.filter.filter(value)
+    }
+
+    private fun initListenerSearch() {
         val textWatcherValue = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -63,12 +73,6 @@ class HomeFragment : Fragment() {
             }
         }
         binding.searchPokemon.addTextChangedListener(textWatcherValue)
-        // Inflate the layout for this fragment
-        return binding.root
-    }
-
-    fun filter(value: String) {
-        pokemonAdapter.filter.filter(value)
     }
 
     private fun initPokemonAdapter() {
@@ -126,6 +130,7 @@ class HomeFragment : Fragment() {
             messageError?.let {message ->
                 Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
                 viewModel.hideLoading()
+                pokemonAdapter.removeLoadingView()
             }
         })
 
