@@ -1,6 +1,7 @@
 package com.mauricio.pokemon.models.pokemon
 
 import com.google.gson.annotations.SerializedName
+import com.mauricio.pokemon.utils.ConverterUtils
 
 data class PokemonDetailResponse (
     val abilities: List<Ability>,
@@ -14,12 +15,42 @@ data class PokemonDetailResponse (
     val stats: List<Stat>,
     val types: List<Type>,
     val weight: Long
-)
+) {
+    fun getHeightFormmated(): String {
+        val valueMeter = (height / 10.0)
+        return "${valueMeter}m (${ConverterUtils.meterToFeetFormatted(valueMeter.toFloat())})"
+    }
+    fun getWeightFormmated(): String {
+        val valueKg = (weight / 10.0)
+        return "${valueKg}kg (${ConverterUtils.kilogramsToPounds(valueKg.toFloat())})"
+    }
+    fun getMainAbility(): String {
+        abilities.firstOrNull { it.isHidden }?.let { ability ->
+            return ability.ability.name.capitalize()
+        } ?: run {
+            return "-"
+        }
+    }
+    fun geHiddenAbility(): String {
+        abilities.firstOrNull { !it.isHidden }?.let { ability ->
+            return ability.ability.name.capitalize()
+        } ?: run {
+            return "-"
+        }
+    }
+}
 
 data class Ability (
-    val ability: Species,
+    @SerializedName("ability")
+    val ability: AbilitySpecies,
+    @SerializedName("is_hidden")
     val isHidden: Boolean,
     val slot: Long
+)
+
+data class AbilitySpecies (
+    val name: String,
+    val url: String
 )
 
 data class Species (

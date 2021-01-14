@@ -35,12 +35,6 @@ class PokemonRecyclerViewAdapter(private val pokemonList: ArrayList<Pokemon?>)
         }
     }
 
-//    fun addMoreData(value: ArrayList<Pokemon?>) {
-//        pokemonList.addAll(value)
-//        pokemonFilterList = pokemonList
-//        notifyDataSetChanged()
-//    }
-
     fun removeLoadingView() {
         //Remove loading item
         if (pokemonList.size != 0) {

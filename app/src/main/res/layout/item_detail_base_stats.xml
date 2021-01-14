@@ -100,7 +100,7 @@
                 android:textSize="12dp"
                 android:textAppearance="@style/pokemon_id"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
 
         </LinearLayout>
@@ -118,7 +118,7 @@
                 android:textSize="12dp"
                 android:textAppearance="@style/pokemon_id"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
 
 
