@@ -21,7 +21,7 @@ class PokemonRecyclerViewAdapter(private val pokemonList: ArrayList<Pokemon?>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     lateinit var callback: IOnClickEvent
-    var pokemonFilterList = ArrayList<Pokemon?>()
+    private var pokemonFilterList = ArrayList<Pokemon?>()
 
     init {
         pokemonFilterList = pokemonList
@@ -42,6 +42,10 @@ class PokemonRecyclerViewAdapter(private val pokemonList: ArrayList<Pokemon?>)
             pokemonFilterList = pokemonList
             notifyItemRemoved(pokemonList.size)
         }
+    }
+
+    fun getItens(): ArrayList<Pokemon?> {
+        return pokemonFilterList
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {

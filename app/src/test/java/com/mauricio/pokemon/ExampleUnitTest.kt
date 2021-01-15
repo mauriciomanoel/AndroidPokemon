@@ -1,17 +1,67 @@
 package com.mauricio.pokemon
 
+import android.app.Application
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.mauricio.pokemon.adapters.pokemon.PokemonRecyclerViewAdapter
+import com.mauricio.pokemon.models.pokemon.Pokemon
+import com.mauricio.pokemon.models.pokemon.TOTAL_INICIAL_POKEMONS
+import com.mauricio.pokemon.repository.PokemonRepository
+import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
+import com.mauricio.pokemon.viewmodel.MainViewModel
+import com.mauricio.pokemon.viewmodel.pokemon.PokemonViewModel
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.SpyK
+import io.mockk.spyk
+import io.mockk.verify
+import junit.framework.Assert.assertNotNull
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Before
+import org.junit.ClassRule
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
 
-import org.junit.Assert.*
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
+@RunWith(MockitoJUnitRunner::class)
 class ExampleUnitTest {
+
+    companion object {
+        @ClassRule
+        @JvmField
+        val schedulers = RxSchedulersOverrideRule()
+    }
+
+    @Rule
+    @JvmField
+    val rule = InstantTaskExecutorRule()
+    @Mock
+    private lateinit var mockContext: Application
+    @Mock
+    private lateinit var viewModelPokemon: PokemonViewModel
+    @Mock
+    private lateinit var pokemonRepository: PokemonRepository
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+        pokemonRepository = PokemonRepository.getInstance(mockContext)
+        viewModelPokemon = PokemonViewModel(mockContext, pokemonRepository)
+    }
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun shouldNotBeNull() {
+        assertNotNull(viewModelPokemon)
+        assertNotNull(pokemonRepository)
+    }
+    @Test
+    fun check_total_pokemons() {
+        viewModelPokemon.getPokemons()
+        assertNotNull(viewModelPokemon.pokemons.value)
+        assertEquals(TOTAL_INICIAL_POKEMONS, viewModelPokemon.pokemons.value?.size)
     }
 }

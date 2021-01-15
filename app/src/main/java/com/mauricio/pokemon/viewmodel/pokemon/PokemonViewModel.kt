@@ -1,6 +1,7 @@
 package com.mauricio.pokemon.viewmodel.pokemon
 
 import android.app.Application
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import com.mauricio.pokemon.R
 import com.mauricio.pokemon.models.pokemon.Pokemon
@@ -8,13 +9,24 @@ import com.mauricio.pokemon.models.pokemon.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.viewmodel.BaseViewModel
 
-class PokemonViewModel(application: Application): BaseViewModel(application) {
-    private val mApplication: Application = application
-    private val repository: PokemonRepository by lazy { PokemonRepository.getInstance(application.baseContext) }
+class PokemonViewModel: BaseViewModel {
+
+    private lateinit var mApplication: Application
+    private lateinit var repository: PokemonRepository
     val pokemons = MutableLiveData<ArrayList<Pokemon>>()
     val fullPokemon = MutableLiveData<Pokemon>()
     val morePokemons = MutableLiveData<ArrayList<Pokemon>>()
     private var offset = 0
+
+    constructor(application: Application): super(application) {
+        mApplication = application
+        this.repository = PokemonRepository.getInstance(application)
+    }
+
+    @VisibleForTesting
+    constructor(application: Application, repository: PokemonRepository) : this(application) {
+        this.repository = repository
+    }
 
     fun getPokemons() {
         showLoading()
