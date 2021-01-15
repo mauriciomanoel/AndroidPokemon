@@ -1,10 +1,9 @@
 # AndroidPokemon
 
-Dependencies
+### Installing Prerequisites
 
-Android Studio: 4.1.1
-
-Compile Sdk Version: 28
+- Android Studio: 4.1.1
+- Compile Sdk Version: 28
 
 ### Features
 
@@ -18,3 +17,10 @@ Compile Sdk Version: 28
 ### Architectural Pattern
 - MVVM
 
+### Libraries
+- AndroidX
+- Retrofit 2
+- LiveData
+- RXJava
+- Glide
+- Lottie
