@@ -2,7 +2,6 @@ package com.mauricio.pokemon
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.mauricio.pokemon.main.models.Constant
 import com.mauricio.pokemon.network.RetrofitApiService
 import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
@@ -31,53 +30,45 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
-class PokemonUnitTest {
+class PokemonUnitTest2 {
 
-//    @Rule
-//    @JvmField
-//    val rule = InstantTaskExecutorRule()
-//
-//    @Rule @JvmField
-//    var mockitoRule = MockitoJUnit.rule()
-//
-//    @Rule @JvmField var testSchedulerRule = RxSchedulersOverrideRule()
-//
-//
-//    @Mock
-//    lateinit var retrofitApiService: RetrofitApiService
-//    @Mock
-//    lateinit var loggingInterceptor: HttpLoggingInterceptor
-//    @Mock
-//    lateinit var pokemonRepository: PokemonRepository
-
-
-    // A JUnit Test Rule that swaps the background executor used by
-    // the Architecture Components with a different one which executes each task synchronously.
-    // You can use this rule for your host side tests that use Architecture Components.
     @Rule
     @JvmField
-    var rule = InstantTaskExecutorRule()
+    val rule = InstantTaskExecutorRule()
 
-    // Test rule for making the RxJava to run synchronously in unit test
-    companion object {
-        @ClassRule
-        @JvmField
-        val schedulers = RxImmediateSchedulerRule()
-    }
+    @Rule @JvmField
+    var mockitoRule = MockitoJUnit.rule()
 
-    @Mock
-    private lateinit var mockContext: Application
-
-    @Mock
-    lateinit var pokemonRepository: PokemonRepository
-
+    @Rule @JvmField var testSchedulerRule = RxSchedulersOverrideRule()
 
     lateinit var viewModel: PokemonViewModel
+    @Mock
+    lateinit var retrofitApiService: RetrofitApiService
+    @Mock
+    lateinit var loggingInterceptor: HttpLoggingInterceptor
+    @Mock
+    lateinit var pokemonRepository: PokemonRepository
+    @Mock
+    private lateinit var mockContext: Application
 
 
     @Before
     fun setup() {
-//        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.initMocks(this)
+
+        val okHttpClient = okhttp3.OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constant.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(okHttpClient)
+            .build()
+        retrofitApiService = retrofit.create(RetrofitApiService::class.java)
+//        pokemonRepository = PokemonRepository(mockContext, retrofitApiService)
         viewModel = PokemonViewModel(mockContext, pokemonRepository)
     }
 
