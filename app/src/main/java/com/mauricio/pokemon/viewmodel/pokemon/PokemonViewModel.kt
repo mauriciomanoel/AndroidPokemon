@@ -51,7 +51,9 @@ class PokemonViewModel: BaseViewModel {
         values?.let {
             pokemons.postValue(it)
         }
-        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
+        e?.let {
+            messageError.postValue(mApplication.getString(R.string.error_operation))
+        }
     }
 
     private fun processPokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
@@ -59,7 +61,9 @@ class PokemonViewModel: BaseViewModel {
         values?.let {
             pokemons.value = it
         }
-        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
+        e?.let {
+            messageError.postValue(mApplication.getString(R.string.error_operation))
+        }
     }
 
     private fun processMorePokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
@@ -68,6 +72,7 @@ class PokemonViewModel: BaseViewModel {
             morePokemons.value?.clear()
             morePokemons.value = it
         }
-        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
+        e?.let {             messageError.postValue(mApplication.getString(R.string.error_operation))
+        }
     }
 }

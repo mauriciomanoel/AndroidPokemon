@@ -2,7 +2,6 @@ package com.mauricio.pokemon
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.mauricio.pokemon.utils.getOrAwaitValue
 import com.mauricio.pokemon.models.pokemon.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
