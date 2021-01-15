@@ -4,52 +4,48 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.pokemon.repository.PokemonRepository
-import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
 import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
+import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
 import junit.framework.Assert.assertNotNull
 import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
+import javax.inject.Inject
 
-
-@RunWith(MockitoJUnitRunner::class)
-class ExampleUnitTest {
+class ConversionUnitTest {
 
     companion object {
         @ClassRule
         @JvmField
         val schedulers = RxSchedulersOverrideRule()
     }
-
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
     @Mock
+    lateinit var viewModel: PokemonViewModel
+    @Mock
     private lateinit var mockContext: Application
     @Mock
-    private lateinit var viewModelPokemon: PokemonViewModel
-    @Mock
-    private lateinit var pokemonRepository: PokemonRepository
+    @Inject lateinit var pokemonRepository: PokemonRepository
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        pokemonRepository = PokemonRepository.getInstance(mockContext)
-        viewModelPokemon = PokemonViewModel(mockContext, pokemonRepository)
+//        pokemonRepository = PokemonRepository(mockContext)
+        viewModel = PokemonViewModel(mockContext, pokemonRepository)
     }
 
     @Test
     fun checkIfVariablesShouldNotBeNull() {
-        assertNotNull(viewModelPokemon)
+        assertNotNull(viewModel)
         assertNotNull(pokemonRepository)
     }
     @Test
     fun callServiceAndReturnListOfPokemons() {
-        viewModelPokemon.getPokemons()
-        assertNotNull(viewModelPokemon.pokemons.value)
-        assertEquals(TOTAL_INICIAL_POKEMONS, viewModelPokemon.pokemons.value?.size)
+        viewModel.getPokemons()
+        assertNotNull(viewModel.pokemons.value)
+        assertEquals(TOTAL_INICIAL_POKEMONS, viewModel.pokemons.value?.size)
     }
 }

@@ -38,6 +38,7 @@ public class RxSchedulersOverrideRule implements TestRule {
                 }
             };
 
+
     @Override
     public Statement apply(final Statement base, Description description) {
         return new Statement() {

@@ -30,11 +30,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    dataBinding {
-        enabled = true
-    }
     testOptions {
         //unitTests.returnDefaultValues = true
+    }
+
+    buildFeatures {
+        dataBinding true
+        // for view binding:
+        // viewBinding true
     }
 }
 
@@ -71,7 +74,6 @@ dependencies {
 //    androidTestImplementation "io.mockk:mockk-android:1.10.0"
 
     implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation "androidx.cardview:cardview:1.0.0"
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -99,10 +101,25 @@ dependencies {
     kapt "com.github.bumptech.glide:annotations:$glide_version"
 
     // Dagger for dependency injection
+//    implementation "com.google.dagger:dagger:$dagger_version"
+//    implementation "com.google.dagger:dagger-android:$dagger_version"
+//    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+//    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+
     implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
+
+    kaptTest "com.google.dagger:dagger-compiler:$dagger_version"
+
+    androidTestImplementation('com.squareup.okhttp3:mockwebserver:1.9.3') {
+        exclude group: "com.squareup.okhttp3"
+    }
+
 
 
 

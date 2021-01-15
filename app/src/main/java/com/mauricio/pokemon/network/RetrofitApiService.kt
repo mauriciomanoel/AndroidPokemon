@@ -7,6 +7,7 @@ import retrofit2.http.*
 
 interface RetrofitApiService {
 
+    @Headers("Accept: application/json", "Content-Type: application/json")
     @GET("pokemon")
     fun getPokemons(@Query("limit") limit: Int,
                     @Query("offset") offset: Int): Observable<PokemonResponse>

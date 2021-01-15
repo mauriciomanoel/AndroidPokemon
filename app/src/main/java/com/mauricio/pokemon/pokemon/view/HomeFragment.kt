@@ -14,21 +14,26 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mauricio.pokemon.PokemonApplication
 import com.mauricio.pokemon.R
 import com.mauricio.pokemon.databinding.FragmentHomeBinding
+import com.mauricio.pokemon.main.MainViewModel
 import com.mauricio.pokemon.pokemon.adapter.PokemonRecyclerViewAdapter
 import com.mauricio.pokemon.views.RecyclerViewLoadMoreScroll
 import com.mauricio.pokemon.main.interfaces.IOnClickEvent
 import com.mauricio.pokemon.views.OnLoadMoreListener
 import com.mauricio.pokemon.pokemon.models.Pokemon
 import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var pokemonAdapter: PokemonRecyclerViewAdapter
-    private val viewModel: PokemonViewModel by lazy { ViewModelProviders.of(this).get(
-        PokemonViewModel::class.java) }
+    @Inject lateinit var viewModel: PokemonViewModel
+//    private val viewModel: PokemonViewModel by lazy { ViewModelProviders.of(this).get(
+//        PokemonViewModel::class.java) }
     private lateinit var recyclerViewLoadMoreScroll: RecyclerViewLoadMoreScroll
     private val listPokemon: ArrayList<Pokemon?> = ArrayList()
     private lateinit var callback: IOnClickEvent
@@ -36,6 +41,11 @@ class HomeFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callback = context as IOnClickEvent
+        (activity?.application as PokemonApplication).androidInjector.inject(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

@@ -8,10 +8,11 @@ import com.mauricio.pokemon.pokemon.models.Pokemon
 import com.mauricio.pokemon.pokemondetail.models.PokemonDetailResponse
 import com.mauricio.pokemon.pokemondetail.models.Stat
 import com.mauricio.pokemon.pokemondetail.models.Type
+import javax.inject.Inject
 
 class PokemonDetailViewModel(application: Application): BaseViewModel(application) {
 
-    private val repository: PokemonRepository by lazy { PokemonRepository.getInstance(application.baseContext) }
+    @Inject lateinit var repository: PokemonRepository
     val statsPokemon = MutableLiveData<ArrayList<Stat>>()
     val typesPokemon = MutableLiveData<ArrayList<Type>>()
     val fullPokemon = MutableLiveData<Pokemon>()

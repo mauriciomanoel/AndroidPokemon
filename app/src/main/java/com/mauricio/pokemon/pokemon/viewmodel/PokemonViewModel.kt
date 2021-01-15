@@ -8,20 +8,21 @@ import com.mauricio.pokemon.pokemon.models.Pokemon
 import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.main.BaseViewModel
+import javax.inject.Inject
 
-class PokemonViewModel: BaseViewModel {
+class PokemonViewModel @Inject constructor(application: Application) : BaseViewModel(application) {
 
-    private lateinit var mApplication: Application
-    private lateinit var repository: PokemonRepository
+    private val mApplication: Application = application
+    @Inject lateinit var repository: PokemonRepository
     val pokemons = MutableLiveData<ArrayList<Pokemon>>()
     val fullPokemon = MutableLiveData<Pokemon>()
     val morePokemons = MutableLiveData<ArrayList<Pokemon>>()
     private var offset = 0
 
-    constructor(application: Application): super(application) {
-        mApplication = application
-        this.repository = PokemonRepository.getInstance(application)
-    }
+//    constructor(application: Application): super(application) {
+//        mApplication = application
+//        this.repository = PokemonRepository.getInstance(application)
+//    }
 
     @VisibleForTesting
     constructor(application: Application, repository: PokemonRepository) : this(application) {
@@ -43,7 +44,7 @@ class PokemonViewModel: BaseViewModel {
     }
 
     private fun processFullPokemon(value: Pokemon) {
-        fullPokemon.postValue(value)
+        fullPokemon.value = value
     }
 
     private fun processFullPokemons(values: ArrayList<Pokemon>?, e: Throwable?) {

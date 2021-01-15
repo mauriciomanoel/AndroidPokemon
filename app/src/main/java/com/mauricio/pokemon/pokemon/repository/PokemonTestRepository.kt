@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.google.gson.GsonBuilder
+import com.mauricio.pokemon.main.models.Constant.BASE_URL
 import com.mauricio.pokemon.network.RetrofitApiService
 import com.mauricio.pokemon.utils.Queue
 import com.mauricio.pokemon.pokemon.models.Pokemon
@@ -12,13 +14,54 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class PokemonRepository @Inject constructor(private val application: Application, private val retrofitApiService: RetrofitApiService)  {
+class PokemonTestRepository @Inject constructor(private val application: Application, private val retrofitApiService: RetrofitApiService)  {
+//    class PokemonRepository @Inject constructor(private val context: Context) {
 
     private val disposable = CompositeDisposable()
     private val queue = Queue(mutableListOf<Pokemon>())
+
+//    @VisibleForTesting
+//    constructor(application: Application, test: Boolean): this(application)  {
+//        this.application = application
+//    }
+
+    private fun getApiService(): RetrofitApiService {
+        // Add interceptor to OkHttpClient
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        val httpLoggingInterceptorHeaders = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        httpLoggingInterceptorHeaders.level = HttpLoggingInterceptor.Level.HEADERS
+
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.addInterceptor(httpLoggingInterceptor)
+        httpClientBuilder.addNetworkInterceptor(httpLoggingInterceptorHeaders)
+        val okHttpClient = httpClientBuilder
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val factory = GsonConverterFactory.create(gson)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(factory)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(okHttpClient)
+            .build()
+        return retrofit.create(RetrofitApiService::class.java)
+
+    }
 
     fun getPokemons(
         limit: Int,
@@ -26,9 +69,9 @@ class PokemonRepository @Inject constructor(private val application: Application
         process: (value: ArrayList<Pokemon>?, e: Throwable?) -> Unit,
         processFullPokemon: (value: Pokemon) -> Unit
     ) {
-        val values = ArrayList<Pokemon>()
+        val values:ArrayList<Pokemon> = ArrayList<Pokemon>()
 
-        retrofitApiService.getPokemons(limit, offset)
+        getApiService().getPokemons(limit, offset)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
             .subscribe({ pokemonResponse ->
@@ -36,10 +79,9 @@ class PokemonRepository @Inject constructor(private val application: Application
                     val pokemon = Pokemon(result.name, result.url)
                     values.add(pokemon)
                     queue.enqueue(pokemon)
-                    Log.v(TAG, pokemon.name)
                 }
-                callProcessQueue(processFullPokemon)
                 process(values, null)
+                callProcessQueue(processFullPokemon)
             }) { e: Throwable? -> process(null, e) }
     }
 
@@ -50,7 +92,6 @@ class PokemonRepository @Inject constructor(private val application: Application
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
                 .subscribe({
-                    Log.v(TAG, it.id.toString())
                     pokemon.detail = it
                     process(pokemon)
                 })
@@ -149,6 +190,6 @@ class PokemonRepository @Inject constructor(private val application: Application
 //    }
 
     companion object {
-        val TAG: String = PokemonRepository::class.java.simpleName
+        val TAG: String = PokemonTestRepository::class.java.simpleName
     }
 }

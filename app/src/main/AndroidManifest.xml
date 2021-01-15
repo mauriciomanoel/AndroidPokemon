@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:name=".PokemonApplication">
         <activity android:name=".pokemondetail.view.DetailPokemonActivity"
             android:theme="@style/Theme.Transparent"></activity>
         <activity android:name=".main.MainActivity" />
