@@ -2,10 +2,10 @@ package com.mauricio.pokemon
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.mauricio.pokemon.models.pokemon.TOTAL_INICIAL_POKEMONS
-import com.mauricio.pokemon.repository.PokemonRepository
+import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
+import com.mauricio.pokemon.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
-import com.mauricio.pokemon.viewmodel.pokemon.PokemonViewModel
+import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
 import junit.framework.Assert.assertNotNull
 import org.junit.*
 import org.junit.Assert.assertEquals

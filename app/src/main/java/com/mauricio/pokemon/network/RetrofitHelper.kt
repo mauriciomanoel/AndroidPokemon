@@ -3,11 +3,11 @@ package com.mauricio.pokemon.network
 import android.content.Context
 import android.net.Uri
 import com.google.gson.GsonBuilder
-import com.mauricio.pokemon.models.Constant.BASE_URL
-import com.mauricio.pokemon.models.SingletonHolder
-import com.mauricio.pokemon.models.pokemon.Pokemon
-import com.mauricio.pokemon.models.pokemon.PokemonDetailResponse
-import com.mauricio.pokemon.models.pokemon.PokemonResponse
+import com.mauricio.pokemon.main.models.Constant.BASE_URL
+import com.mauricio.pokemon.utils.SingletonHolder
+import com.mauricio.pokemon.pokemon.models.Pokemon
+import com.mauricio.pokemon.pokemondetail.models.PokemonDetailResponse
+import com.mauricio.pokemon.pokemon.models.PokemonResponse
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import okhttp3.OkHttpClient

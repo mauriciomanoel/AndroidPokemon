@@ -13,11 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.pokemon.DetailPokemonActivity"
+        <activity android:name=".pokemondetail.view.DetailPokemonActivity"
             android:theme="@style/Theme.Transparent"></activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".main.MainActivity" />
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name=".main.SplashScreenActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent"

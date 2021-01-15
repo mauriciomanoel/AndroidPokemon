@@ -7,22 +7,22 @@
         <import type="android.view.View" />
         <variable
             name="pokemon"
-            type="com.mauricio.pokemon.models.pokemon.Pokemon"/>
+            type="com.mauricio.pokemon.pokemon.models.Pokemon"/>
         <variable
             name="viewModel"
-            type="com.mauricio.pokemon.viewmodel.pokemon.PokemonDetailViewModel"/>
+            type="com.mauricio.pokemon.pokemondetail.viewmodel.PokemonDetailViewModel"/>
         <variable
             name="detailAdapter"
-            type="com.mauricio.pokemon.adapters.pokemon.PokemonDetailRecyclerViewAdapter"/>
+            type="com.mauricio.pokemon.pokemondetail.adapter.PokemonDetailRecyclerViewAdapter"/>
         <variable
             name="typeAdapter"
-            type="com.mauricio.pokemon.adapters.pokemon.PokemonTypeRecyclerViewAdapter"/>
+            type="com.mauricio.pokemon.pokemondetail.adapter.PokemonTypeRecyclerViewAdapter"/>
     </data>
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.pokemon.DetailPokemonActivity">
+    tools:context=".pokemondetail.view.DetailPokemonActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

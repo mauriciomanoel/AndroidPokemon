@@ -1,9 +1,8 @@
 package com.mauricio.pokemon.network
 
-import com.mauricio.pokemon.models.pokemon.PokemonDetailResponse
-import com.mauricio.pokemon.models.pokemon.PokemonResponse
+import com.mauricio.pokemon.pokemondetail.models.PokemonDetailResponse
+import com.mauricio.pokemon.pokemon.models.PokemonResponse
 import io.reactivex.Observable
-import retrofit2.Response
 import retrofit2.http.*
 
 interface RetrofitApiService {

@@ -8,10 +8,10 @@
         <import type="android.view.View" />
         <variable
             name="pokemon"
-            type="com.mauricio.pokemon.models.pokemon.Pokemon"/>
+            type="com.mauricio.pokemon.pokemon.models.Pokemon"/>
         <variable
             name="typeAdapter"
-            type="com.mauricio.pokemon.adapters.pokemon.PokemonTypeRecyclerViewAdapter"/>
+            type="com.mauricio.pokemon.pokemondetail.adapter.PokemonTypeRecyclerViewAdapter"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
