@@ -4,6 +4,7 @@ import android.app.Application
 import com.mauricio.pokemon.network.RetrofitApiService
 import com.mauricio.pokemon.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
+import com.mauricio.pokemon.pokemondetail.viewmodel.PokemonDetailViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,5 +27,8 @@ class AppModule {
 
     @Provides
     fun providePokemonViewModel(application: Application) = PokemonViewModel(application)
+
+    @Provides
+    fun providePokemonDetailViewModel(application: Application) = PokemonDetailViewModel(application)
 
 }

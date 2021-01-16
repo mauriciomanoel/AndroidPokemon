@@ -9,26 +9,32 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import com.mauricio.pokemon.R
 import com.mauricio.pokemon.databinding.ActivityDetailPokemonBinding
+import com.mauricio.pokemon.main.MainViewModel
 import com.mauricio.pokemon.pokemon.models.Pokemon
 import com.mauricio.pokemon.pokemondetail.models.Stat
 import com.mauricio.pokemon.pokemondetail.models.Type
 import com.mauricio.pokemon.pokemondetail.adapter.PokemonDetailRecyclerViewAdapter
 import com.mauricio.pokemon.pokemondetail.viewmodel.PokemonDetailViewModel
 import com.mauricio.pokemon.pokemondetail.adapter.PokemonTypeRecyclerViewAdapter
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class DetailPokemonActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailPokemonBinding
-    private val viewModel: PokemonDetailViewModel by lazy { ViewModelProviders.of(this).get(
-        PokemonDetailViewModel::class.java) }
+    @Inject
+    lateinit var viewModel: PokemonDetailViewModel
+
+//    private val viewModel: PokemonDetailViewModel by lazy { ViewModelProviders.of(this).get(
+//        PokemonDetailViewModel::class.java) }
     private lateinit var pokemonDetailAdapter: PokemonDetailRecyclerViewAdapter
     private lateinit var pokemonTypeAdapter: PokemonTypeRecyclerViewAdapter
     private val listStatsPokemon: ArrayList<Stat?> = ArrayList()
     private val typesPokemon: ArrayList<Type> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_pokemon)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

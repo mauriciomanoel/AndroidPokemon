@@ -7,6 +7,7 @@ import com.mauricio.pokemon.di.module.AppModule
 import com.mauricio.pokemon.di.module.FragmentBindings
 import com.mauricio.pokemon.di.module.NetworkModule
 import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
+import com.mauricio.pokemon.pokemondetail.viewmodel.PokemonDetailViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 interface AppComponent : AndroidInjector<PokemonApplication> {
     fun inject(application: Application)
     fun inject(viewModel:PokemonViewModel)
+    fun inject(viewModel:PokemonDetailViewModel)
 
     @Component.Builder
     interface Builder {
