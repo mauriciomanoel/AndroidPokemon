@@ -20,6 +20,8 @@ class NetworkModule {
     @Module
     companion object {
 
+        const val BASE_URL = "https://pokeapi.co/api/v2/"
+
         @JvmStatic
         @Singleton
         @Provides
@@ -43,7 +45,7 @@ class NetworkModule {
         @Provides
         fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
                 Retrofit.Builder()
-                        .baseUrl(Constant.BASE_URL)
+                        .baseUrl(BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .client(okHttpClient)

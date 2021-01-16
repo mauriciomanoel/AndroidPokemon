@@ -3,6 +3,7 @@ package com.mauricio.pokemon.di.module
 import android.app.Application
 import com.mauricio.pokemon.network.RetrofitApiService
 import com.mauricio.pokemon.pokemon.repository.PokemonRepository
+import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -21,6 +22,9 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRestService(application: Application, apiService: RetrofitApiService) = PokemonRepository(application, apiService)
+    fun provideRepository(apiService: RetrofitApiService) = PokemonRepository(apiService)
+
+    @Provides
+    fun providePokemonViewModel(application: Application) = PokemonViewModel(application)
 
 }

@@ -15,7 +15,8 @@ class Pokemon(
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${getId()}.png"
     }
     fun getId(): Int? {
-        return Uri.parse(url).lastPathSegment?.toInt()
+        val values = url.split("/").filter { it.isNotBlank() }
+        return values[values.size-1].toInt()
     }
     fun getNameFormatted():String {
         return name.capitalize()

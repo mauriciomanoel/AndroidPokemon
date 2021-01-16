@@ -11,11 +11,12 @@ import com.mauricio.pokemon.pokemondetail.models.PokemonDetailResponse
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class PokemonRepository @Inject constructor(private val application: Application, private val retrofitApiService: RetrofitApiService)  {
+class PokemonRepository @Inject constructor(private val apiService: RetrofitApiService)  {
 
     private val disposable = CompositeDisposable()
     private val queue = Queue(mutableListOf<Pokemon>())
@@ -26,9 +27,8 @@ class PokemonRepository @Inject constructor(private val application: Application
         process: (value: ArrayList<Pokemon>?, e: Throwable?) -> Unit,
         processFullPokemon: (value: Pokemon) -> Unit
     ) {
-        val values = ArrayList<Pokemon>()
-
-        retrofitApiService.getPokemons(limit, offset)
+        val values = ArrayList< Pokemon>()
+        apiService.getPokemons(limit, offset)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
             .subscribe({ pokemonResponse ->
@@ -36,45 +36,48 @@ class PokemonRepository @Inject constructor(private val application: Application
                     val pokemon = Pokemon(result.name, result.url)
                     values.add(pokemon)
                     queue.enqueue(pokemon)
-                    Log.v(TAG, pokemon.name)
                 }
-                callProcessQueue(processFullPokemon)
+            }, {e: Throwable? -> process(null, e)}, {
                 process(values, null)
-            }) { e: Throwable? -> process(null, e) }
+                callProcessQueue(processFullPokemon)
+            })
     }
 
     fun callProcessQueue(process: (value: Pokemon) -> Unit) {
         while (!queue.isEmpty()) {
             val pokemon = queue.dequeue()
-            retrofitApiService.getDetailPokemon(pokemon?.getId()!!)
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
-                .subscribe({
-                    Log.v(TAG, it.id.toString())
-                    pokemon.detail = it
-                    process(pokemon)
-                })
+            pokemon?.getId()?.let { id ->
+                apiService.getDetailPokemon(id)
+                    .subscribeOn(Schedulers.single())
+                    .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
+                    .subscribe({
+                        Log.v(TAG, it.id.toString())
+                        pokemon.detail = it
+                        process(pokemon)
+                    }, {
+                        e -> Log.v(TAG, e.message)
+                    })
+            }
+
         }
     }
 
     fun getDetailPokemon(values: ArrayList<Pokemon>?, process: (value: Pokemon) -> Unit) {
         values?.let { pokemons ->
             Log.v(TAG, "${pokemons.toString()}")
-           val a = Observable.fromIterable(pokemons)
+            val a = Observable.fromIterable(pokemons)
             a.subscribeOn(Schedulers.single())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .concatMap { pokemon ->
                     Observable.zip(
                         Observable.just(pokemon),
-                        retrofitApiService.getDetailPokemon(pokemon.getId()!!),
-                        { pokemon, detail ->
-                            pokemon.detail = detail
-                            Log.v(TAG, "${pokemon.getId()}")
-
-                            pokemon
+                        apiService.getDetailPokemon(pokemon.getId()!!),
+                        BiFunction<Pokemon, PokemonDetailResponse, Pokemon> { pokemon, detail ->
+                            // here we get both the results at a time.
+                            return@BiFunction pokemon
                         }
                     )
-                }.subscribe({it ->
+                }.subscribe({ it ->
                     it.apply(process)
                 }, {})
             disposable.add(a.subscribe())
@@ -82,7 +85,7 @@ class PokemonRepository @Inject constructor(private val application: Application
     }
 
     fun getDetailPokemon(id: Int, process: (value: PokemonDetailResponse?, e: Throwable?) -> Unit) {
-        retrofitApiService.getDetailPokemon(id)
+        apiService.getDetailPokemon(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
             .subscribe({ detail ->
@@ -92,7 +95,7 @@ class PokemonRepository @Inject constructor(private val application: Application
 
     fun getDetailPokemon(id: Int): PokemonDetailResponse? {
         var detail: PokemonDetailResponse? = null
-        retrofitApiService.getDetailPokemon(id)
+        apiService.getDetailPokemon(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
             .subscribe({
@@ -108,7 +111,7 @@ class PokemonRepository @Inject constructor(private val application: Application
         process: (value: ArrayList<Pokemon>?, e: Throwable?) -> Unit
     ) {
         val pokemons = ArrayList<Pokemon>()
-        retrofitApiService.getPokemons(limit, offset)
+        apiService.getPokemons(limit, offset)
             .flatMap { result -> Observable.fromIterable(result.results) }
             .flatMap { result ->
                 Observable.zip(
@@ -116,10 +119,10 @@ class PokemonRepository @Inject constructor(private val application: Application
                     Observable.just(result.url)
                         .flatMap { url ->
                             val a = Uri.parse(url).lastPathSegment
-                            retrofitApiService.getDetailPokemon(Uri.parse(url).lastPathSegment!!.toInt())
+                            apiService.getDetailPokemon(Uri.parse(url).lastPathSegment!!.toInt())
                         }
                     ,
-                    { pokemon, detail ->
+                    BiFunction<Pokemon, PokemonDetailResponse, Pokemon> { pokemon, detail ->
                         pokemon.detail = detail
                         pokemon
                     }
@@ -131,22 +134,6 @@ class PokemonRepository @Inject constructor(private val application: Application
                 process(null, e)
             }, { process(pokemons, null) })
     }
-
-//    fun getFullPokemons(
-//        limit: Int,
-//        offset: Int,
-//        process: (value: ArrayList<Pokemon>?, e: Throwable?) -> Unit
-//    ) {
-//        val pokemons = ArrayList<Pokemon>()
-//        retrofitApiService.getFullPokemons(limit, offset)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread()) // Thread that observer will execute
-//            .subscribe({ pokemon ->
-//                pokemons.add(pokemon)
-//            }, { e ->
-//                process(null, e)
-//            }, { process(pokemons, null) })
-//    }
 
     companion object {
         val TAG: String = PokemonRepository::class.java.simpleName

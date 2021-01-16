@@ -34,7 +34,7 @@ class ConversionUnitTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 //        pokemonRepository = PokemonRepository(mockContext)
-        viewModel = PokemonViewModel(mockContext, pokemonRepository)
+        viewModel = PokemonViewModel(mockContext)
     }
 
     @Test
