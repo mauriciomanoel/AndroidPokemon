@@ -5,7 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
-import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
+import com.mauricio.pokemon.rules.RxImmediateSchedulerRule
 import junit.framework.Assert.assertNotNull
 import org.junit.*
 import org.junit.Assert.assertEquals
@@ -18,7 +18,7 @@ class ConversionUnitTest {
     companion object {
         @ClassRule
         @JvmField
-        val schedulers = RxSchedulersOverrideRule()
+        val schedulers = RxImmediateSchedulerRule()
     }
     @Rule
     @JvmField

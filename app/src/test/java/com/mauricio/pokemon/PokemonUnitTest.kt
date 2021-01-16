@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.pokemon.viewmodel.PokemonViewModel
-import com.mauricio.pokemon.rules.RxSchedulersOverrideRule
+import com.mauricio.pokemon.rules.RxImmediateSchedulerRule
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Before
@@ -23,7 +23,7 @@ class PokemonUnitTest {
     companion object {
         @ClassRule
         @JvmField
-        val schedulers = RxSchedulersOverrideRule()
+        val schedulers = RxImmediateSchedulerRule()
     }
 
     @Mock
