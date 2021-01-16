@@ -16,17 +16,20 @@ import com.mauricio.pokemon.pokemon.view.HomeFragment
 import com.mauricio.pokemon.main.models.ScreenControlEnum
 import com.mauricio.pokemon.main.interfaces.IOnClickEvent
 import com.mauricio.pokemon.pokemon.models.Pokemon
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), IOnClickEvent {
 
-    private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
+    @Inject
+    lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        val binding:ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         setContentView(binding.root)

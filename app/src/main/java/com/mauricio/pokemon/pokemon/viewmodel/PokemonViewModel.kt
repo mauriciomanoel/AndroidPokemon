@@ -3,29 +3,32 @@ package com.mauricio.pokemon.pokemon.viewmodel
 import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.mauricio.pokemon.PokemonApplication
 import com.mauricio.pokemon.R
+import com.mauricio.pokemon.di.component.DaggerAppComponent
 import com.mauricio.pokemon.pokemon.models.Pokemon
 import com.mauricio.pokemon.pokemon.models.TOTAL_INICIAL_POKEMONS
 import com.mauricio.pokemon.pokemon.repository.PokemonRepository
 import com.mauricio.pokemon.main.BaseViewModel
+import com.mauricio.pokemon.network.RetrofitApiService
+import javax.inject.Inject
 
-class PokemonViewModel: BaseViewModel {
+class PokemonViewModel @Inject constructor(private val application: Application): BaseViewModel()  {
 
-    private lateinit var mApplication: Application
-    private lateinit var repository: PokemonRepository
+    private var  mApplication: Application = application
+
+    @Inject
+    lateinit var repository: PokemonRepository
+
     val pokemons = MutableLiveData<ArrayList<Pokemon>>()
     val fullPokemon = MutableLiveData<Pokemon>()
     val morePokemons = MutableLiveData<ArrayList<Pokemon>>()
     private var offset = 0
 
-    constructor(application: Application): super(application) {
-        mApplication = application
-        this.repository = PokemonRepository.getInstance(application)
-    }
-
-    @VisibleForTesting
-    constructor(application: Application, repository: PokemonRepository) : this(application) {
-        this.repository = repository
+    //initializing the necessary components and classes
+    init {
+        DaggerAppComponent.builder().app(mApplication).build().inject(this)
     }
 
     fun getPokemons() {
@@ -43,15 +46,17 @@ class PokemonViewModel: BaseViewModel {
     }
 
     private fun processFullPokemon(value: Pokemon) {
-        fullPokemon.postValue(value)
+        fullPokemon.value = value
     }
 
     private fun processFullPokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
         hideLoading()
         values?.let {
-            pokemons.postValue(it)
+            pokemons.value = it
         }
-        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
+//        e?.let {
+////            messageError.value = mApplication.getString(R.string.error_operation)
+//        }
     }
 
     private fun processPokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
@@ -59,7 +64,7 @@ class PokemonViewModel: BaseViewModel {
         values?.let {
             pokemons.value = it
         }
-        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
+//        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
     }
 
     private fun processMorePokemons(values: ArrayList<Pokemon>?, e: Throwable?) {
@@ -68,6 +73,6 @@ class PokemonViewModel: BaseViewModel {
             morePokemons.value?.clear()
             morePokemons.value = it
         }
-        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
+//        e?.let { messageError.value = mApplication.getString(R.string.error_operation) }
     }
 }
